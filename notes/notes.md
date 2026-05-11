@@ -4,7 +4,8 @@
 
 Express est un **framework Node.js** qui permet de créer un serveur HTTP facilement. Il fait le lien entre le client (navigateur, curl, frontend) et la base de données.
 
-```Client (navigateur / curl)
+```
+Client (navigateur / curl)
         ↓  requête HTTP
     Express (serveur)
         ↓  requête SQL
@@ -32,7 +33,57 @@ app.listen(3000, () => { ... }) // démarre le serveur sur le port 3000
 
 ---
 
-## 2. Le CRUD
+## 2. La connexion à la BDD — `db.js`
+
+`db.js` est un fichier séparé qui gère uniquement la connexion à PostgreSQL. Il exporte un `pool` utilisé dans toutes les routes via `pool.query()`.
+
+```javascript
+import dotenv from "dotenv";
+import { Pool } from "pg";
+
+dotenv.config(); // charge les variables du fichier .env
+
+const pool = new Pool({
+  user: process.env.POSTGRES_USER,
+  host: "localhost",
+  database: process.env.POSTGRES_DB,
+  password: process.env.POSTGRES_PASSWORD,
+  port: process.env.POSTGRES_PORT,
+});
+
+pool
+  .connect()
+  .then(() => console.log("✅ Connected to the database"))
+  .catch((err) => console.log("❌ Error connecting to the database", err));
+
+export default pool;
+```
+
+### Décorticage
+
+- **`dotenv`** — module qui lit le fichier `.env` et injecte les variables dans `process.env`
+- **`Pool`** — classe de `pg` qui gère un ensemble de connexions réutilisables à PostgreSQL
+- **`new Pool({...})`** — crée le pool avec les identifiants de connexion
+- **`process.env.POSTGRES_USER`** — lit la variable `POSTGRES_USER` définie dans `.env`
+- **`pool.connect()`** — teste la connexion au démarrage et affiche un message selon le résultat
+- **`export default pool`** — exporte le pool pour l'utiliser dans `server.js` via `import pool from "./db.js"`
+
+### Le fichier `.env`
+
+Les identifiants de connexion ne doivent jamais être écrits en dur dans le code — ils sont stockés dans un fichier `.env` ignoré par Git.
+
+```dotenv
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin
+POSTGRES_DB=adatabase
+POSTGRES_PORT=5432
+```
+
+⚠️ Toujours ajouter `.env` dans `.gitignore`. Créer un `.env.example` avec les clés mais sans les valeurs pour documenter les variables nécessaires.
+
+---
+
+## 3. Le CRUD
 
 Le **CRUD** regroupe les 4 opérations fondamentales sur une base de données :
 
@@ -47,7 +98,7 @@ Le **CRUD** regroupe les 4 opérations fondamentales sur une base de données :
 
 ---
 
-## 3. Différences entre les méthodes HTTP
+## 4. Différences entre les méthodes HTTP
 
 | Méthode  | Action                               | SQL           |
 | -------- | ------------------------------------ | ------------- |
@@ -61,7 +112,7 @@ Le **CRUD** regroupe les 4 opérations fondamentales sur une base de données :
 
 ---
 
-## 4. Le middleware `app.use(express.json())`
+## 5. Le middleware `app.use(express.json())`
 
 Par défaut, Express ne sait pas lire le contenu d'une requête POST. Il reçoit les données brutes mais ne les décode pas automatiquement.
 
@@ -88,7 +139,7 @@ req.body.name; // "C#" ✅
 
 ---
 
-## 5. Les routes `/skills`
+## 6. Les routes `/skills`
 
 ### GET — récupérer toutes les skills
 
@@ -182,7 +233,7 @@ curl -X DELETE http://localhost:3000/skills/1
 
 ---
 
-## 6. Points clés à retenir
+## 7. Points clés à retenir
 
 - **`$1`, `$2`...** — paramètres positionnels PostgreSQL, toujours passés dans un tableau `[valeur1, valeur2]`
 - **`RETURNING *`** — indispensable après `INSERT`, `UPDATE`, `DELETE` pour récupérer la ligne dans `rows`
@@ -193,7 +244,7 @@ curl -X DELETE http://localhost:3000/skills/1
 
 ---
 
-## 7. Tester avec curl
+## 8. Tester avec curl
 
 Le serveur doit rester lancé. Ouvrir un **second terminal** pour lancer les commandes curl.
 
