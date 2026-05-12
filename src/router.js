@@ -2,10 +2,10 @@
 // Pour éviter que app.js devienne trop gros, on utilise express.Router().
 
 import express from "express";
-import { skillsRouter } from "../routes/skills.js";
-import { resourcesSkillsRouter } from "../routes/resources_skills.js";
-import { themesRouter } from "../routes/themes.js";
-import { resourcesRouter } from "../routes/resources.js";
+import { skillsRouter } from "./routes/skills.js";
+import { resourcesSkillsRouter } from "./routes/resources_skills.js";
+import { themesRouter } from "./routes/themes.js";
+import { resourcesRouter } from "./routes/resources.js";
 
 export const router = express.Router();
 
