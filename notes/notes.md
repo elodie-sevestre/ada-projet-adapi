@@ -4,7 +4,7 @@
 
 Express est un **framework Node.js** qui permet de créer un serveur HTTP facilement. Il fait le lien entre le client (navigateur, curl, frontend) et la base de données.
 
-```
+```terminal
 Client (navigateur / curl)
         ↓  requête HTTP
     Express (serveur)
