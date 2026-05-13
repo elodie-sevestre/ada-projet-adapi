@@ -14,5 +14,7 @@ router.use("/resources_skills", resourcesSkillsRouter);
 router.use("/themes", themesRouter);
 router.use("/resources", resourcesRouter);
 
+// export default router;  on peut mettre ceci si on ne met pas le "export" devant
+
 // module.exports = router; autre syntaxe pour export const router = express.Router();
 // il se place à la fin pour ne pas brouiller la vue
