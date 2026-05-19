@@ -1,9 +1,11 @@
 import express from "express";
+import cors from "cors";
 import pool from "./db.js"; // connexion PostgreSQL
 import { router } from "./router.js";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json()); // middleware indispensable à POST
 
 app.get("/", async (req, res) => res.send("Hello Ada!\n"));
