@@ -19,6 +19,16 @@ skillsRouter.get("/:id", async (req, res) => {
   res.json(rows[0]);
 });
 
+// GET skills/:id/resources - route pour lier skills à resources via l'id
+
+skillsRouter.get("/:id/resources", async (req, res) => {
+  const { rows } = await pool.query(
+    " SELECT * FROM resources JOIN resources_skills ON resources.id=resources_skills.resource_id WHERE skill_id=$1",
+    [req.params.id],
+  );
+  res.json(rows);
+});
+
 // POST - création route POST pour insérer une nouvelle skills
 skillsRouter.post("/", async (req, res) => {
   const insertNewSkills = await pool.query(
